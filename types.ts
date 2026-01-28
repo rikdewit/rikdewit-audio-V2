@@ -1,18 +1,14 @@
 
-export interface TranscriptionEntry {
-  role: 'user' | 'model';
-  text: string;
-  timestamp: number;
+export interface Service {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
 }
 
-export enum SessionStatus {
-  IDLE = 'IDLE',
-  CONNECTING = 'CONNECTING',
-  CONNECTED = 'CONNECTED',
-  ERROR = 'ERROR'
-}
-
-export interface AudioVisualizerProps {
-  isRecording: boolean;
-  analyzerNode?: AnalyserNode;
+export interface PortfolioItem {
+  id: number;
+  imageUrl: string;
+  category: string;
+  title: string;
 }
