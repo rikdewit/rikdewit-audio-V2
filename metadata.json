@@ -1,0 +1,7 @@
+{
+  "name": "Rikewit Audio",
+  "description": "A world-class AI audio studio powered by Gemini Live, featuring real-time voice interaction, low-latency processing, and high-fidelity visualizers.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
