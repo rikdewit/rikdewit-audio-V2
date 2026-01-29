@@ -707,7 +707,7 @@ const OnboardingForm: React.FC = () => {
             <p className="text-gray-500 font-light text-base sm:text-lg leading-relaxed max-w-md">Vul dit formulier in voor een vliegende start. Dit helpt mij om direct inzicht te krijgen in de technische eisen van jouw project.</p>
           </div>
           <div className="lg:col-span-3 w-full max-w-full">
-            <div className="bg-gray-50 rounded-sm border border-gray-200 shadow-xl relative overflow-hidden h-[540px] sm:h-[580px] flex flex-col transition-all duration-500 w-full">
+            <div className="bg-gray-50 rounded-sm border border-gray-200 shadow-xl relative overflow-hidden h-[550px] sm:h-[590px] flex flex-col transition-all duration-500 w-full">
               
               {/* Progress Header */}
               <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-1 shrink-0">
