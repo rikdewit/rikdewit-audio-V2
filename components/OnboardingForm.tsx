@@ -102,12 +102,16 @@ const OnboardingForm: React.FC = () => {
     const service = formData['main-service'];
     const who = formData['advies-who'];
     const performers = formData['performers'];
+    const studioType = formData['studio-type'];
 
     if (service === 'live') {
       if (performers?.includes('Band') || formData['has-live-music'] === 'ja') return "Band / Act Naam";
       return "Bedrijf / Eventnaam";
     }
-    if (service === 'studio') return "Project / Band Naam";
+    if (service === 'studio') {
+      if (studioType === 'Podcast opname' || studioType === 'Voice-over') return "Projectnaam";
+      return "Project / Band Naam";
+    }
     if (service === 'advies') {
       if (who === 'Particulier') return "Projectnaam";
       if (who === 'Evenementen organisator') return "Bedrijf / Evenementnaam";
@@ -120,12 +124,16 @@ const OnboardingForm: React.FC = () => {
     const service = formData['main-service'];
     const who = formData['advies-who'];
     const performers = formData['performers'];
+    const studioType = formData['studio-type'];
 
     if (service === 'live') {
       if (performers?.includes('Band') || formData['has-live-music'] === 'ja') return "Naam van de band of act";
       return "Bijv. Agency naam of naam van het evenement";
     }
-    if (service === 'studio') return "Naam van de band of het project";
+    if (service === 'studio') {
+      if (studioType === 'Podcast opname' || studioType === 'Voice-over') return "Naam van het project";
+      return "Naam van de band of het project";
+    }
     if (service === 'advies') {
       if (who === 'Horeca / Retail') return "Naam van de zaak of restaurant";
       if (who === 'Evenementen organisator') return "Naam van het bureau of de organisatie";
@@ -463,7 +471,7 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Voorkeur voor advies?</h2>
-            <div className="grid gap-2">{['Online (Video call)', 'Bezoek op locatie', 'Weet ik nog niet'].map(t => (
+            <div className="grid gap-2">{['Online (Video call)', 'Bezoek op location', 'Weet ik nog niet'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['advies-methode'] === t} onClick={() => updateFormData('advies-methode', t)} />
             ))}</div>
           </div>
