@@ -179,8 +179,8 @@ const OnboardingForm: React.FC = () => {
     if (step === 'advies-who') {
       const who = formData['advies-who'];
       if (who === 'Muzikant / Band') return 'advies-muzikant-details';
-      if (who === 'Anders') return 'anders-beschrijving';
-      return 'advies-goal';
+      if (who === 'Evenementen organisator' || who === 'Particulier / Hi-Fi' || who === 'Anders') return 'anders-beschrijving';
+      return 'advies-goal'; // Horeca / Retail goes here
     }
     if (step === 'advies-goal') {
       // Horeca goes straight to details text area
@@ -450,7 +450,8 @@ const OnboardingForm: React.FC = () => {
                           currentStep === 'advies-muzikant-details' ? 'advies-muzikant-details' :
                           'anders-details';
         
-        const heading = currentStep === 'advies-muzikant-details' ? "Waar kan ik je bij helpen?" : "Vertel meer over de aanvraag";
+        const isAdvice = formData['main-service'] === 'advies';
+        const heading = isAdvice ? "Waar kan ik je mee helpen?" : "Vertel meer over de aanvraag";
         const placeholder = currentStep === 'advies-muzikant-details' 
           ? "Vertel me waar je als muzikant of band naar op zoek bent. Bijvoorbeeld advies over je setup, sound, of een technische uitdaging." 
           : "Wat is belangrijk om te weten?";
