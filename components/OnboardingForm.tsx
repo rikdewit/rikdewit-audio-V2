@@ -367,9 +367,11 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Type event?</h2>
-            <div className="grid gap-2">{['Concert / Festival', 'Bedrijfsevent', 'Privéfeest / Bruiloft', 'Presentatie / Congres'].map(t => (
+            <div className="grid gap-2">
+              {['Concert / Festival', 'Bedrijfsevent', 'Presentatie / Congres', 'Privéfeest / Bruiloft', 'Anders'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['event-type'] === t} onClick={() => updateFormData('event-type', t)} />
-            ))}</div>
+              ))}
+            </div>
           </div>
         );
       case 'live-music-check':
