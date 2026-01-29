@@ -18,7 +18,7 @@ const Services: React.FC = () => {
           <div className="mb-12 relative group">
             <div className="w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white shadow-2xl transition-all duration-500 ease-out hover:scale-[1.03] hover:rotate-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] cursor-pointer">
               <img 
-                src="Rik.jpeg" 
+                src="/Rik.jpeg" 
                 alt="Rik de Wit" 
                 className="w-full h-full object-cover scale-110"
                 onError={(e) => {
