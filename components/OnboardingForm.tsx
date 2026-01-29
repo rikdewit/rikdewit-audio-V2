@@ -414,8 +414,8 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="text-center py-20 space-y-10 animate-in zoom-in duration-700">
             <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-black mb-6 shadow-2xl relative"><div className="absolute inset-0 rounded-full bg-[#87E8A0]/20 animate-ping duration-1000" /><CheckCircle2 className="text-[#87E8A0] relative z-10" size={64} strokeWidth={1} /></div>
-            <h2 className="text-5xl font-light tracking-tight text-black">Briefing Ontvangen</h2>
-            <p className="text-gray-500 text-xl font-light max-w-lg mx-auto leading-relaxed">Bedankt voor de details. Ik kom binnen 24 uur bij je terug met een concreet voorstel.</p>
+            <h2 className="text-5xl font-light tracking-tight text-black">Aanvraag Ontvangen</h2>
+            <p className="text-gray-500 text-xl font-light max-w-lg mx-auto leading-relaxed">Bedankt voor de details. Ik kom zo snel mogelijk bij je terug met een concreet voorstel.</p>
             <div className="pt-10"><button onClick={() => { setFormData({'contact-pref': 'email'}); setCurrentStep('main'); setStepHistory(['main']); }} className="text-xs font-bold tracking-[0.4em] uppercase underline underline-offset-[12px] text-black hover:text-gray-400 transition-colors">Nieuwe aanvraag</button></div>
           </div>
         );
