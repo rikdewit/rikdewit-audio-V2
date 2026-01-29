@@ -460,9 +460,19 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Praktische info</h2>
-            <div className="grid gap-4 sm:gap-6">
-               <div className="flex flex-col gap-1"><label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Datum</label><input type="date" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black" value={formData['event-date'] || ''} onChange={e => updateFormData('event-date', e.target.value)} /></div>
-               <div className="flex flex-col gap-1"><label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Toelichting</label><textarea className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light min-h-[100px] resize-none bg-transparent text-black" placeholder="Andere details?" value={formData['event-details'] || ''} onChange={e => updateFormData('event-details', e.target.value)} /></div>
+            <div className="grid gap-3 sm:gap-4">
+               <div className="flex flex-col gap-0.5">
+                 <label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Datum</label>
+                 <input type="date" className="border-b border-gray-300 py-1.5 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" value={formData['event-date'] || ''} onChange={e => updateFormData('event-date', e.target.value)} />
+               </div>
+               <div className="flex flex-col gap-0.5">
+                 <label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Locatie</label>
+                 <input type="text" className="border-b border-gray-300 py-1.5 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="Stad of specifieke plek" value={formData['event-location'] || ''} onChange={e => updateFormData('event-location', e.target.value)} />
+               </div>
+               <div className="flex flex-col gap-0.5">
+                 <label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Toelichting</label>
+                 <textarea className="border-b border-gray-300 py-1.5 text-base sm:text-lg focus:border-black outline-none font-light min-h-[80px] resize-none bg-transparent text-black" placeholder="Aanvullende wensen of bijzonderheden?" value={formData['event-details'] || ''} onChange={e => updateFormData('event-details', e.target.value)} />
+               </div>
             </div>
           </div>
         );
