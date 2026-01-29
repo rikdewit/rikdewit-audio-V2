@@ -9,7 +9,7 @@ type StepId =
   | 'live-type' | 'live-hire-role' | 'live-hire-details' 
   | 'live-event-type' | 'live-music-check' | 'speakers-only' 
   | 'performers' | 'instruments' | 'location-equipment' | 'location-name' | 'live-practical'
-  | 'studio-type' | 'studio-details'
+  | 'studio-type' | 'studio-recording-method' | 'studio-locatie-keuze' | 'studio-details'
   | 'nabewerking-type' | 'nabewerking-details'
   | 'advies-who' | 'advies-goal' | 'advies-ruimte' | 'advies-doel' | 'advies-methode'
   | 'advies-gebruik' | 'advies-kopen-details' | 'advies-kopen-type'
@@ -70,7 +70,13 @@ const OnboardingForm: React.FC = () => {
       case 'live-hire-role': return !!formData['hire-role'];
       case 'live-hire-details': return !!formData['hire-details'];
       case 'studio-type': return !!formData['studio-type'];
-      case 'studio-details': return !!formData['studio-details'];
+      case 'studio-recording-method': return !!formData['studio-recording-method'];
+      case 'studio-locatie-keuze': return !!formData['studio-locatie-keuze'];
+      case 'studio-details': {
+        const needsLoc = formData['studio-locatie-keuze'] === 'Op locatie';
+        if (needsLoc && !formData['studio-location-text']) return false;
+        return !!formData['studio-details'];
+      }
       case 'nabewerking-type': return !!formData['nabewerking-type'];
       case 'nabewerking-details': return !!formData['nabewerking-details'];
       case 'advies-who': return !!formData['advies-who'];
@@ -153,8 +159,18 @@ const OnboardingForm: React.FC = () => {
     if (step === 'location-equipment') return (formData['equip-Weet ik (nog) niet']) ? 'location-name' : 'live-practical';
     if (step === 'location-name') return 'live-practical';
     if (step === 'live-practical') return 'contact';
-    if (step === 'studio-type') return 'studio-details';
+    
+    // Studio Flow
+    if (step === 'studio-type') {
+      const t = formData['studio-type'];
+      if (t === 'Band / Instrumenten') return 'studio-recording-method';
+      if (t === 'Podcast opname' || t === 'Voice-over') return 'studio-locatie-keuze';
+      return 'studio-details';
+    }
+    if (step === 'studio-recording-method') return 'studio-locatie-keuze';
+    if (step === 'studio-locatie-keuze') return 'studio-details';
     if (step === 'studio-details') return 'contact';
+
     if (step === 'nabewerking-type') return 'nabewerking-details';
     if (step === 'nabewerking-details') return 'contact';
     if (step === 'advies-who') return 'advies-goal';
@@ -276,16 +292,70 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Type studio sessie?</h2>
-            <div className="grid gap-2">{['Opname (Band/Zang)', 'Podcast opname', 'Mixage / Mastering', 'Voice-over'].map(t => (
+            <div className="grid gap-2">
+              {['Band / Instrumenten', 'Podcast opname', 'Mixage / Mastering', 'Voice-over', 'Anders'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['studio-type'] === t} onClick={() => updateFormData('studio-type', t)} />
-            ))}</div>
+              ))}
+            </div>
+          </div>
+        );
+      case 'studio-recording-method':
+        return (
+          <div className="space-y-3 sm:space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Hoe wil je opnemen?</h2>
+            <div className="grid gap-2">
+              {['Live opname', 'Multitrack / Overdubs'].map(m => (
+                <OptionCard key={m} label={m} isSelected={formData['studio-recording-method'] === m} onClick={() => updateFormData('studio-recording-method', m)} />
+              ))}
+            </div>
+          </div>
+        );
+      case 'studio-locatie-keuze':
+        return (
+          <div className="space-y-3 sm:space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Waar vindt de opname plaats?</h2>
+            <div className="grid gap-2">
+              {['Op locatie', 'Bij jou in de studio (Eindhoven)', 'Help mij een geschikte plek zoeken'].map(l => (
+                <OptionCard key={l} label={l} isSelected={formData['studio-locatie-keuze'] === l} onClick={() => updateFormData('studio-locatie-keuze', l)} />
+              ))}
+            </div>
+          </div>
+        );
+      case 'studio-details':
+        const isOpLocatie = formData['studio-locatie-keuze'] === 'Op locatie';
+        return (
+          <div className="space-y-3 sm:space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Vertel meer over de aanvraag</h2>
+            <div className="grid gap-3 sm:gap-4">
+               {isOpLocatie && (
+                 <div className="flex flex-col gap-0.5">
+                   <label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Locatie</label>
+                   <input 
+                     type="text" 
+                     className="border-b border-gray-300 py-1.5 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" 
+                     placeholder="Adres, stad of locatienaam" 
+                     value={formData['studio-location-text'] || ''} 
+                     onChange={e => updateFormData('studio-location-text', e.target.value)} 
+                   />
+                 </div>
+               )}
+               <div className="flex flex-col gap-0.5">
+                 <label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Toelichting</label>
+                 <textarea 
+                   className="w-full border-b border-gray-300 py-1.5 text-base sm:text-lg focus:border-black outline-none font-light min-h-[140px] resize-none bg-transparent text-black" 
+                   placeholder="Wat is belangrijk om te weten over je project?" 
+                   value={formData['studio-details'] || ''} 
+                   onChange={e => updateFormData('studio-details', e.target.value)} 
+                 />
+               </div>
+            </div>
           </div>
         );
       case 'nabewerking-type':
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Wat moet er bewerkt worden?</h2>
-            <div className="grid gap-2">{['Podcast-montage & editing', 'Mixen van een muziekopname', 'Geluid onder video editen / mixen', 'Anders'].map(t => (
+            <div className="grid gap-2">{['Podcast-montage & editing', 'Mixen / Masteren van een muziekopname', 'Geluid onder video editen / mixen', 'Anders'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['nabewerking-type'] === t} onClick={() => updateFormData('nabewerking-type', t)} />
             ))}</div>
           </div>
@@ -354,15 +424,16 @@ const OnboardingForm: React.FC = () => {
           </div>
         );
       case 'live-hire-details':
-      case 'studio-details':
       case 'nabewerking-details':
       case 'advies-kopen-details':
       case 'anders-beschrijving':
-        const fieldName = currentStep === 'live-hire-details' ? 'hire-details' : currentStep === 'studio-details' ? 'studio-details' : currentStep === 'nabewerking-details' ? 'nabewerking-details' : currentStep === 'advies-kopen-details' ? 'advies-kopen-details' : 'anders-details';
+        const fieldName = currentStep === 'live-hire-details' ? 'hire-details' : currentStep === 'nabewerking-details' ? 'nabewerking-details' : currentStep === 'advies-kopen-details' ? 'advies-kopen-details' : 'anders-details';
+        const finalPlaceholder = "Wat is belangrijk om te weten?";
+
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Vertel meer over de aanvraag</h2>
-            <textarea className="w-full border-b border-gray-300 py-3 sm:py-4 text-base sm:text-lg focus:border-black outline-none font-light min-h-[160px] sm:min-h-[180px] resize-none bg-transparent text-black" placeholder="Wat is belangrijk om te weten?" value={formData[fieldName] || ''} onChange={e => updateFormData(fieldName, e.target.value)} />
+            <textarea className="w-full border-b border-gray-300 py-3 sm:py-4 text-base sm:text-lg focus:border-black outline-none font-light min-h-[160px] sm:min-h-[180px] resize-none bg-transparent text-black" placeholder={finalPlaceholder} value={formData[fieldName] || ''} onChange={e => updateFormData(fieldName, e.target.value)} />
           </div>
         );
       case 'live-event-type':
