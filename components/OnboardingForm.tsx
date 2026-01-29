@@ -255,7 +255,7 @@ const OnboardingForm: React.FC = () => {
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Hoe kan ik helpen?</h2>
             <div className="grid gap-2">
               <OptionCard label="Ik organiseer een evenement - Help mij de juiste keuzes maken" isSelected={formData['live-type'] === 'organize'} onClick={() => updateFormData('live-type', 'organize')} />
-              <OptionCard label="Huur me direct in als technicus" isSelected={formData['live-type'] === 'hire'} onClick={() => updateFormData('live-type', 'hire')} />
+              <OptionCard label="Huur mij direct in als technicus" isSelected={formData['live-type'] === 'hire'} onClick={() => updateFormData('live-type', 'hire')} />
             </div>
           </div>
         );
@@ -380,7 +380,7 @@ const OnboardingForm: React.FC = () => {
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Is er live muziek?</h2>
             <div className="grid gap-2">
               <OptionCard label="Ja, live muziek" isSelected={formData['has-live-music'] === 'ja'} onClick={() => updateFormData('has-live-music', 'ja')} />
-              <OptionCard label="Nee, alleen spraak" isSelected={formData['has-live-music'] === 'nee'} onClick={() => updateFormData('has-live-music', 'nee')} />
+              <OptionCard label="Nee, alleen sprekers of audio playback" isSelected={formData['has-live-music'] === 'nee'} onClick={() => updateFormData('has-live-music', 'nee')} />
             </div>
           </div>
         );
