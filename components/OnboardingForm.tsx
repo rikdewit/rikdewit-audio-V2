@@ -633,24 +633,24 @@ const OnboardingForm: React.FC = () => {
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Contactgegevens</h2>
             <div className="grid gap-4 sm:gap-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+              <div className="grid grid-cols-2 gap-3 sm:gap-5">
                 <div className="flex flex-col gap-1">
                   <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">Naam *</label>
-                  <input type="text" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="Je voor- en achternaam" value={formData['contact-name'] || ''} onChange={e => updateFormData('contact-name', e.target.value)} />
+                  <input type="text" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="Je naam" value={formData['contact-name'] || ''} onChange={e => updateFormData('contact-name', e.target.value)} />
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">{dynamicOrgLabel}</label>
                   <input type="text" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder={dynamicOrgPlaceholder} value={formData['contact-org'] || ''} onChange={e => updateFormData('contact-org', e.target.value)} />
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+              <div className="grid grid-cols-2 gap-3 sm:gap-5">
                 <div className="flex flex-col gap-1">
                   <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">E-mail *</label>
-                  <input type="email" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="voorbeeld@mail.com" value={formData['contact-email'] || ''} onChange={e => updateFormData('contact-email', e.target.value)} />
+                  <input type="email" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="Mail" value={formData['contact-email'] || ''} onChange={e => updateFormData('contact-email', e.target.value)} />
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">Telefoon *</label>
-                  <input type="tel" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="06 12345678" value={formData['contact-phone'] || ''} onChange={e => updateFormData('contact-phone', e.target.value)} />
+                  <input type="tel" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="06..." value={formData['contact-phone'] || ''} onChange={e => updateFormData('contact-phone', e.target.value)} />
                 </div>
               </div>
               <div className="flex flex-col gap-1">
@@ -707,7 +707,7 @@ const OnboardingForm: React.FC = () => {
             <p className="text-gray-500 font-light text-base sm:text-lg leading-relaxed max-w-md">Vul dit formulier in voor een vliegende start. Dit helpt mij om direct inzicht te krijgen in de technische eisen van jouw project.</p>
           </div>
           <div className="lg:col-span-3 w-full max-w-full">
-            <div className="bg-gray-50 rounded-sm border border-gray-200 shadow-xl relative overflow-hidden h-[550px] sm:h-[590px] flex flex-col transition-all duration-500 w-full">
+            <div className="bg-gray-50 rounded-sm border border-gray-200 shadow-xl relative overflow-hidden h-[630px] sm:h-[680px] flex flex-col transition-all duration-500 w-full">
               
               {/* Progress Header */}
               <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-1 shrink-0">
