@@ -405,7 +405,12 @@ const OnboardingForm: React.FC = () => {
           </div>
         );
       case 'location-equipment':
-        const equipOptions = ['Speakers (PA)', 'Mixer', 'Microfoons', 'Monitoren', 'Backline', 'Bekabeling', 'Stroomtoevoer', 'Weet ik (nog) niet'];
+        // Filter out 'Backline' if there's no live music selected
+        const baseEquipOptions = ['Speakers (PA)', 'Mixer', 'Microfoons', 'Monitoren', 'Backline', 'Bekabeling', 'Stroomtoevoer', 'Weet ik (nog) niet'];
+        const equipOptions = formData['has-live-music'] === 'nee' 
+          ? baseEquipOptions.filter(opt => opt !== 'Backline')
+          : baseEquipOptions;
+          
         const isEquipmentBlocked = formData['equip-Weet ik (nog) niet'];
         
         return (
