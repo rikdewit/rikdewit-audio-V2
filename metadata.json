@@ -1,4 +1,5 @@
 {
   "name": "Rik de Wit Audio",
-  "description": "Een minimalistische en professionele website voor Rik de Wit Audio, gespecialiseerd in live mixing, evenementen en technische ondersteuning."
+  "description": "Een minimalistische en professionele website voor Rik de Wit Audio, gespecialiseerd in live mixing, evenementen en technische ondersteuning.",
+  "requestFramePermissions": []
 }
