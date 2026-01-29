@@ -388,7 +388,7 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Wie treedt er op?</h2>
-            <div className="grid gap-2">{['Solo artiest / DJ', 'Duo / Trio', 'Band (2-5 personen)', 'Band (6+ personen)', 'Meerdere acts'].map(p => (
+            <div className="grid gap-2">{['Solo artiest / DJ', 'Duo / Trio', 'Band (2-5 personen)', 'Grote Band / Ensemble (6+ personen)', 'Meerdere acts'].map(p => (
                 <OptionCard key={p} label={p} isSelected={formData['performers'] === p} onClick={() => updateFormData('performers', p)} />
             ))}</div>
           </div>
