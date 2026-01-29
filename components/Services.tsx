@@ -23,7 +23,7 @@ const Services: React.FC = () => {
                 className="w-full h-full object-cover scale-110"
                 onError={(e) => {
                   // Fallback to placeholder if Rik.jpeg is missing
-                  (e.target as HTMLImageElement).src = "https://s6.imgcdn.dev/Y0aAnN.md.jpg";
+                  (e.target as HTMLImageElement).src = "https://s6.imgcdn.dev/Y0aAnN.jpg";
                 }}
               />
             </div>
