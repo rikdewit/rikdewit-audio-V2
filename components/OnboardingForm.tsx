@@ -179,7 +179,7 @@ const OnboardingForm: React.FC = () => {
     if (step === 'advies-who') {
       const who = formData['advies-who'];
       if (who === 'Muzikant / Band') return 'advies-muzikant-details';
-      if (who === 'Evenementen organisator' || who === 'Particulier / Hi-Fi' || who === 'Anders') return 'anders-beschrijving';
+      if (who === 'Evenementen organisator' || who === 'Particulier' || who === 'Anders') return 'anders-beschrijving';
       return 'advies-goal'; // Horeca / Retail goes here
     }
     if (step === 'advies-goal') {
