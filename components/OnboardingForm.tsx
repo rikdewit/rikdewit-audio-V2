@@ -68,35 +68,72 @@ const OnboardingForm: React.FC = () => {
       case 'main': return !!formData['main-service'];
       case 'live-type': return !!formData['live-type'];
       case 'live-hire-role': return !!formData['hire-role'];
-      case 'live-hire-details': return !!formData['hire-details'];
       case 'studio-type': return !!formData['studio-type'];
       case 'studio-recording-method': return !!formData['studio-recording-method'];
       case 'studio-locatie-keuze': return !!formData['studio-locatie-keuze'];
-      case 'studio-details': {
-        const needsLoc = formData['studio-locatie-keuze'] === 'Op locatie';
-        if (needsLoc && !formData['studio-location-text']) return false;
-        return !!formData['studio-details'];
-      }
+      case 'studio-details': return !!formData['studio-details'];
       case 'nabewerking-type': return !!formData['nabewerking-type'];
-      case 'nabewerking-details': return !!formData['nabewerking-details'];
       case 'advies-who': return !!formData['advies-who'];
       case 'advies-goal': return !!formData['advies-goal'];
-      case 'advies-muzikant-details': return !!formData['advies-muzikant-details'];
       case 'advies-ruimte': return !!formData['advies-ruimte'];
       case 'advies-doel': return !!formData['advies-doel'];
       case 'advies-methode': return !!formData['advies-methode'];
       case 'advies-gebruik': return !!formData['advies-gebruik'];
-      case 'advies-kopen-details': return !!formData['advies-kopen-details'];
       case 'advies-kopen-type': return !!formData['advies-kopen-type'];
+      case 'live-hire-details': return !!formData['hire-details'];
+      case 'nabewerking-details': return !!formData['nabewerking-details'];
+      case 'advies-kopen-details': return !!formData['advies-kopen-details'];
       case 'anders-beschrijving': return !!formData['anders-details'];
+      case 'advies-muzikant-details': return !!formData['advies-muzikant-details'];
       case 'live-event-type': return !!formData['event-type'];
       case 'live-music-check': return !!formData['has-live-music'];
       case 'performers': return !!formData['performers'];
+      case 'instruments': return true;
+      case 'location-equipment': 
+        return Object.keys(formData).some(k => k.startsWith('equip-') && formData[k]);
       case 'location-name': return !!formData['loc-name'];
+      case 'live-practical': return !!formData['event-date'] && !!formData['event-location'];
       case 'contact': return isContactStepValid;
       default: return true;
     }
   }, [currentStep, formData, isContactStepValid]);
+
+  const dynamicOrgLabel = useMemo(() => {
+    const service = formData['main-service'];
+    const who = formData['advies-who'];
+    const performers = formData['performers'];
+
+    if (service === 'live') {
+      if (performers?.includes('Band') || formData['has-live-music'] === 'ja') return "Band / Act Naam";
+      return "Bedrijf / Eventnaam";
+    }
+    if (service === 'studio') return "Project / Band Naam";
+    if (service === 'advies') {
+      if (who === 'Particulier') return "Projectnaam";
+      if (who === 'Evenementen organisator') return "Bedrijf / Evenementnaam";
+      if (who) return who; 
+    }
+    return "Bedrijfsnaam / Organisatie";
+  }, [formData]);
+
+  const dynamicOrgPlaceholder = useMemo(() => {
+    const service = formData['main-service'];
+    const who = formData['advies-who'];
+    const performers = formData['performers'];
+
+    if (service === 'live') {
+      if (performers?.includes('Band') || formData['has-live-music'] === 'ja') return "Naam van de band of act";
+      return "Bijv. Agency naam of naam van het evenement";
+    }
+    if (service === 'studio') return "Naam van de band of het project";
+    if (service === 'advies') {
+      if (who === 'Horeca / Retail') return "Naam van de zaak of restaurant";
+      if (who === 'Evenementen organisator') return "Naam van het bureau of de organisatie";
+      if (who === 'Muzikant / Band') return "Naam van de band of act";
+      if (who === 'Particulier') return "Naam van het project";
+    }
+    return "Naam van je bedrijf of organisatie";
+  }, [formData]);
 
   const formatProjectDetails = (data: FormData): string => {
     const rows: string[] = [];
@@ -105,6 +142,15 @@ const OnboardingForm: React.FC = () => {
     };
     const serviceMap: any = { 'live': 'Live Geluid', 'studio': 'Studio Opname', 'nabewerking': 'Nabewerking', 'advies': 'Advies', 'anders': 'Overig' };
     addRow('Dienst', serviceMap[data['main-service']] || data['main-service']);
+    
+    if (data['contact-org']) {
+      addRow('Namens / Organisatie', data['contact-org']);
+    }
+
+    if (data['contact-location']) {
+      addRow('Locatie', data['contact-location']);
+    }
+
     Object.keys(data).forEach(key => {
       if (!key.startsWith('contact-') && key !== 'main-service') {
         addRow(key.replace(/-/g, ' ').toUpperCase(), data[key]);
@@ -125,6 +171,7 @@ const OnboardingForm: React.FC = () => {
         customer_name: customerName,
         customer_email: customerEmail,
         customer_phone: formData['contact-phone'],
+        customer_location: formData['contact-location'] || 'Niet opgegeven',
         contact_preference: formData['contact-pref'],
         project_type: projectType,
         project_details_html: projectDetailsHtml,
@@ -376,7 +423,7 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Voor wie is het advies?</h2>
-            <div className="grid gap-2">{['Horeca / Retail', 'Evenementen organisator', 'Particulier / Hi-Fi', 'Muzikant / Band', 'Anders'].map(t => (
+            <div className="grid gap-2">{['Horeca / Retail', 'Evenementen organisator', 'Particulier', 'Muzikant / Band', 'Anders'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['advies-who'] === t} onClick={() => updateFormData('advies-who', t)} />
             ))}</div>
           </div>
@@ -450,15 +497,15 @@ const OnboardingForm: React.FC = () => {
                           currentStep === 'advies-muzikant-details' ? 'advies-muzikant-details' :
                           'anders-details';
         
-        const isAdvice = formData['main-service'] === 'advies';
-        const heading = isAdvice ? "Waar kan ik je mee helpen?" : "Vertel meer over de aanvraag";
+        const isAdviceStep = formData['main-service'] === 'advies';
+        const adviceHeading = isAdviceStep ? "Waar kan ik je mee helpen?" : "Vertel meer over de aanvraag";
         const placeholder = currentStep === 'advies-muzikant-details' 
           ? "Vertel me waar je als muzikant of band naar op zoek bent. Bijvoorbeeld advies over je setup, sound, of een technische uitdaging." 
           : "Wat is belangrijk om te weten?";
 
         return (
           <div className="space-y-3 sm:space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">{heading}</h2>
+            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">{adviceHeading}</h2>
             <textarea className="w-full border-b border-gray-300 py-3 sm:py-4 text-base sm:text-lg focus:border-black outline-none font-light min-h-[160px] sm:min-h-[180px] resize-none bg-transparent text-black" placeholder={placeholder} value={formData[fieldName] || ''} onChange={e => updateFormData(fieldName, e.target.value)} />
           </div>
         );
@@ -578,10 +625,29 @@ const OnboardingForm: React.FC = () => {
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Contactgegevens</h2>
             <div className="grid gap-4 sm:gap-5">
-              <div className="flex flex-col gap-1"><label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">Naam *</label><input type="text" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" value={formData['contact-name'] || ''} onChange={e => updateFormData('contact-name', e.target.value)} /></div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-                <div className="flex flex-col gap-1"><label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">E-mail *</label><input type="email" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" value={formData['contact-email'] || ''} onChange={e => updateFormData('contact-email', e.target.value)} /></div>
-                <div className="flex flex-col gap-1"><label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">Telefoon *</label><input type="tel" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" value={formData['contact-phone'] || ''} onChange={e => updateFormData('contact-phone', e.target.value)} /></div>
+                <div className="flex flex-col gap-1">
+                  <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">Naam *</label>
+                  <input type="text" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="Je voor- en achternaam" value={formData['contact-name'] || ''} onChange={e => updateFormData('contact-name', e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">{dynamicOrgLabel}</label>
+                  <input type="text" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder={dynamicOrgPlaceholder} value={formData['contact-org'] || ''} onChange={e => updateFormData('contact-org', e.target.value)} />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                <div className="flex flex-col gap-1">
+                  <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">E-mail *</label>
+                  <input type="email" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="voorbeeld@mail.com" value={formData['contact-email'] || ''} onChange={e => updateFormData('contact-email', e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">Telefoon *</label>
+                  <input type="tel" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="06 12345678" value={formData['contact-phone'] || ''} onChange={e => updateFormData('contact-phone', e.target.value)} />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="mono text-[10px] uppercase text-gray-500 font-bold tracking-widest">Locatie</label>
+                <input type="text" className="border-b border-gray-300 py-2 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" placeholder="Stad/Plaats" value={formData['contact-location'] || ''} onChange={e => updateFormData('contact-location', e.target.value)} />
               </div>
               <div className="flex flex-col gap-2 sm:gap-3 mt-1 sm:mt-2"><label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Voorkeur</label>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3">{[{ id: 'email', label: 'Mail', icon: Mail }, { id: 'telefoon', label: 'Bel', icon: Phone }, { id: 'whatsapp', label: 'App', icon: MessageSquare }].map(opt => (
