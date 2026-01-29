@@ -32,13 +32,16 @@ const Services: React.FC = () => {
             <div className="absolute inset-0 rounded-full border border-black/5 -m-2 pointer-events-none group-hover:scale-110 transition-transform duration-700" />
           </div>
 
-          {/* About Text - Updated with specific bolding and content */}
+          {/* Separator line between photo and text */}
+          <div className="w-8 h-px bg-black/10 mb-8" />
+
+          {/* About Text */}
           <div className="max-w-2xl mx-auto text-gray-500 font-light text-sm sm:text-base leading-relaxed mb-10 px-4">
+            <span className="block text-xl sm:text-2xl text-black mb-2">
+              <span className="handwritten text-3xl sm:text-4xl inline-block transition-transform hover:scale-110 duration-300">Hoi ik ben Rik!</span>
+            </span>
             <p>
-              Hoi ik ben Rik!
-            </p>
-            <p>
-              audio technicus voor evenementen en live muziek. Door mijn achtergrond als muzikant en producer combineer ik technische kennis met inzicht in wat een goede show nodig heeft. Zo zorg ik voor een betrouwbaar en prettig klinkend resultaat, ook onder druk.
+              Audio technicus voor evenementen en live muziek. Door mijn achtergrond als muzikant en producer combineer ik technische kennis met inzicht in wat een goede show nodig heeft. Zo zorg ik voor een betrouwbaar en prettig klinkend resultaat, ook onder druk.
             </p>
           </div>
 
@@ -46,17 +49,18 @@ const Services: React.FC = () => {
           <div className="w-12 h-px bg-black/20 mx-auto" />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+        {/* Smaller grid (max-w-5xl instead of 6xl) and more compact padding (p-6) */}
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {SERVICES.map((service) => (
             <div 
               key={service.id} 
-              className="group flex flex-col items-center text-center p-8 sm:p-10 bg-white border border-gray-50 hover:border-gray-100 hover:shadow-xl transition-all duration-500 rounded-sm"
+              className="group flex flex-col items-center text-center p-6 sm:p-8 bg-white border border-gray-50 hover:border-gray-100 hover:shadow-xl transition-all duration-500 rounded-sm"
             >
-              <div className="mb-6 text-black group-hover:scale-110 transition-transform duration-500">
+              <div className="mb-4 text-black group-hover:scale-110 transition-transform duration-500">
                 {IconMap[service.icon]}
               </div>
-              <h3 className="text-xl font-medium mb-4 tracking-wide mono uppercase">{service.title}</h3>
-              <p className="text-gray-500 text-sm sm:text-base font-light leading-relaxed">
+              <h3 className="text-lg font-medium mb-3 tracking-wide mono uppercase">{service.title}</h3>
+              <p className="text-gray-500 text-xs sm:text-sm font-light leading-relaxed">
                 {service.description}
               </p>
             </div>
