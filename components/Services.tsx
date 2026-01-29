@@ -2,6 +2,7 @@ import React from 'react';
 import { Mic2, Speaker, Settings } from 'lucide-react';
 import { SERVICES } from '../constants';
 
+
 const IconMap: Record<string, React.ReactNode> = {
   Mic2: <Mic2 strokeWidth={1} size={48} />,
   Speaker: <Speaker strokeWidth={1} size={48} />,
@@ -13,13 +14,17 @@ const Services: React.FC = () => {
     <section id="expertises" className="min-h-screen flex items-center py-20 px-6 bg-[#fafafa]">
       <div className="max-w-7xl mx-auto w-full">
         <div className="mb-24 text-center flex flex-col items-center">
-          {/* Profile Photo - Round cutout with always-on color and subtle hover animation */}
+          {/* Profile Photo - Updated to use Rik.jpeg as a local static file */}
           <div className="mb-12 relative group">
             <div className="w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white shadow-2xl transition-all duration-500 ease-out hover:scale-[1.03] hover:rotate-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] cursor-pointer">
               <img 
-                src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400" 
+                src="Rik.jpeg" 
                 alt="Rik de Wit" 
                 className="w-full h-full object-cover scale-110"
+                onError={(e) => {
+                  // Fallback to placeholder if Rik.jpeg is missing
+                  (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400";
+                }}
               />
             </div>
             {/* Subtle decorative ring that expands on hover */}
