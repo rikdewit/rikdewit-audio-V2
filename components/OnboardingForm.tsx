@@ -11,7 +11,7 @@ type StepId =
   | 'performers' | 'instruments' | 'location-equipment' | 'location-name' | 'live-practical'
   | 'studio-type' | 'studio-recording-method' | 'studio-locatie-keuze' | 'studio-details'
   | 'nabewerking-type' | 'nabewerking-details'
-  | 'advies-who' | 'advies-goal' | 'advies-ruimte' | 'advies-doel' | 'advies-methode'
+  | 'advies-who' | 'advies-goal' | 'advies-muzikant-details' | 'advies-ruimte' | 'advies-doel' | 'advies-methode'
   | 'advies-gebruik' | 'advies-kopen-details' | 'advies-kopen-type'
   | 'anders-beschrijving'
   | 'contact' | 'success' | 'error';
@@ -81,6 +81,7 @@ const OnboardingForm: React.FC = () => {
       case 'nabewerking-details': return !!formData['nabewerking-details'];
       case 'advies-who': return !!formData['advies-who'];
       case 'advies-goal': return !!formData['advies-goal'];
+      case 'advies-muzikant-details': return !!formData['advies-muzikant-details'];
       case 'advies-ruimte': return !!formData['advies-ruimte'];
       case 'advies-doel': return !!formData['advies-doel'];
       case 'advies-methode': return !!formData['advies-methode'];
@@ -127,7 +128,7 @@ const OnboardingForm: React.FC = () => {
         contact_preference: formData['contact-pref'],
         project_type: projectType,
         project_details_html: projectDetailsHtml,
-        customer_message: formData['hire-details'] || formData['event-details'] || formData['studio-details'] || formData['nabewerking-details'] || formData['anders-details'] || 'Geen extra toelichting.'
+        customer_message: formData['hire-details'] || formData['event-details'] || formData['studio-details'] || formData['nabewerking-details'] || formData['advies-muzikant-details'] || formData['anders-details'] || 'Geen extra toelichting.'
       };
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { ...baseParams, recipient_email: MIJN_EMAIL, email_subject: `Nieuwe aanvraag: ${projectType} - ${customerName}`, reply_to: customerEmail }, EMAILJS_PUBLIC_KEY);
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { ...baseParams, recipient_email: customerEmail, email_subject: `Bevestiging van je aanvraag: ${projectType}`, reply_to: MIJN_EMAIL }, EMAILJS_PUBLIC_KEY);
@@ -173,7 +174,14 @@ const OnboardingForm: React.FC = () => {
 
     if (step === 'nabewerking-type') return 'nabewerking-details';
     if (step === 'nabewerking-details') return 'contact';
-    if (step === 'advies-who') return 'advies-goal';
+    
+    // Advies Flow
+    if (step === 'advies-who') {
+      const who = formData['advies-who'];
+      if (who === 'Muzikant / Band') return 'advies-muzikant-details';
+      if (who === 'Anders') return 'anders-beschrijving';
+      return 'advies-goal';
+    }
     if (step === 'advies-goal') {
       const g = formData['advies-goal'];
       if (g === 'Geluidsinstallatie voor event') return 'live-event-type';
@@ -181,6 +189,7 @@ const OnboardingForm: React.FC = () => {
       if (g === 'Apparatuur aanschaffen') return 'advies-gebruik';
       return 'anders-beschrijving';
     }
+    if (step === 'advies-muzikant-details') return 'contact';
     if (step === 'advies-ruimte') return 'advies-doel';
     if (step === 'advies-doel') return 'advies-methode';
     if (step === 'advies-methode') return 'contact';
@@ -302,7 +311,7 @@ const OnboardingForm: React.FC = () => {
       case 'studio-recording-method':
         return (
           <div className="space-y-3 sm:space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Hoe wil je opnemen?</h2>
+            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Hoe wil je opnemen??</h2>
             <div className="grid gap-2">
               {['Live opname', 'Multitrack / Overdubs'].map(m => (
                 <OptionCard key={m} label={m} isSelected={formData['studio-recording-method'] === m} onClick={() => updateFormData('studio-recording-method', m)} />
@@ -315,7 +324,7 @@ const OnboardingForm: React.FC = () => {
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Waar vindt de opname plaats?</h2>
             <div className="grid gap-2">
-              {['Op locatie', 'Bij jou in de studio (Eindhoven)', 'Help mij een geschikte plek zoeken'].map(l => (
+              {['Op locatie', 'Bij jou in de studio', 'Nee, help mij een geschikte plek zoeken'].map(l => (
                 <OptionCard key={l} label={l} isSelected={formData['studio-locatie-keuze'] === l} onClick={() => updateFormData('studio-locatie-keuze', l)} />
               ))}
             </div>
@@ -355,7 +364,7 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Wat moet er bewerkt worden?</h2>
-            <div className="grid gap-2">{['Podcast-montage & editing', 'Mixen / Masteren van een muziekopname', 'Geluid onder video editen / mixen', 'Anders'].map(t => (
+            <div className="grid gap-2">{['Podcast-montage & editing', 'Mixen van een muziekopname', 'Geluid onder video editen / mixen', 'Anders'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['nabewerking-type'] === t} onClick={() => updateFormData('nabewerking-type', t)} />
             ))}</div>
           </div>
@@ -364,7 +373,7 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Voor wie is het advies?</h2>
-            <div className="grid gap-2">{['Muzikant / Band', 'Horeca / Retail', 'Podcaster', 'Particulier / Hi-Fi'].map(t => (
+            <div className="grid gap-2">{['Horeca / Retail', 'Evenementen organisator', 'Particulier / Hi-Fi', 'Muzikant / Band', 'Anders'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['advies-who'] === t} onClick={() => updateFormData('advies-who', t)} />
             ))}</div>
           </div>
@@ -427,13 +436,22 @@ const OnboardingForm: React.FC = () => {
       case 'nabewerking-details':
       case 'advies-kopen-details':
       case 'anders-beschrijving':
-        const fieldName = currentStep === 'live-hire-details' ? 'hire-details' : currentStep === 'nabewerking-details' ? 'nabewerking-details' : currentStep === 'advies-kopen-details' ? 'advies-kopen-details' : 'anders-details';
-        const finalPlaceholder = "Wat is belangrijk om te weten?";
+      case 'advies-muzikant-details':
+        const fieldName = currentStep === 'live-hire-details' ? 'hire-details' : 
+                          currentStep === 'nabewerking-details' ? 'nabewerking-details' : 
+                          currentStep === 'advies-kopen-details' ? 'advies-kopen-details' : 
+                          currentStep === 'advies-muzikant-details' ? 'advies-muzikant-details' :
+                          'anders-details';
+        
+        const heading = currentStep === 'advies-muzikant-details' ? "Waar kan ik je bij helpen?" : "Vertel meer over de aanvraag";
+        const placeholder = currentStep === 'advies-muzikant-details' 
+          ? "Vertel me waar je als muzikant of band naar op zoek bent. Bijvoorbeeld advies over je setup, sound, of een technische uitdaging." 
+          : "Wat is belangrijk om te weten?";
 
         return (
           <div className="space-y-3 sm:space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Vertel meer over de aanvraag</h2>
-            <textarea className="w-full border-b border-gray-300 py-3 sm:py-4 text-base sm:text-lg focus:border-black outline-none font-light min-h-[160px] sm:min-h-[180px] resize-none bg-transparent text-black" placeholder={finalPlaceholder} value={formData[fieldName] || ''} onChange={e => updateFormData(fieldName, e.target.value)} />
+            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">{heading}</h2>
+            <textarea className="w-full border-b border-gray-300 py-3 sm:py-4 text-base sm:text-lg focus:border-black outline-none font-light min-h-[160px] sm:min-h-[180px] resize-none bg-transparent text-black" placeholder={placeholder} value={formData[fieldName] || ''} onChange={e => updateFormData(fieldName, e.target.value)} />
           </div>
         );
       case 'live-event-type':
