@@ -150,7 +150,7 @@ const OnboardingForm: React.FC = () => {
     if (step === 'live-music-check') return formData['has-live-music'] === 'ja' ? 'performers' : 'location-equipment';
     if (step === 'performers') return (formData['performers']?.includes('Band')) ? 'instruments' : 'location-equipment';
     if (step === 'instruments') return 'location-equipment';
-    if (step === 'location-equipment') return (formData['equip-Weet ik niet'] || formData['equip-Niks aanwezig']) ? 'location-name' : 'live-practical';
+    if (step === 'location-equipment') return (formData['equip-Weet ik (nog) niet']) ? 'location-name' : 'live-practical';
     if (step === 'location-name') return 'live-practical';
     if (step === 'live-practical') return 'contact';
     if (step === 'studio-type') return 'studio-details';
@@ -204,7 +204,6 @@ const OnboardingForm: React.FC = () => {
       <div className={`absolute inset-0 bg-gradient-to-r from-[#87E8A0]/10 to-[#71E2E4]/10 transition-all duration-500 ease-out ${isSelected ? 'w-full' : 'w-0 group-hover:w-full'}`} />
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-4 sm:gap-5">
-          {/* shrink-0 ensures the circle doesn't deform when text is long */}
           <div className={`w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-full border flex items-center justify-center transition-all ${isSelected ? 'bg-black border-black text-white' : 'border-gray-200 text-gray-400 group-hover:border-black group-hover:text-black'}`}>
             {Icon ? <Icon size={12} /> : <Check size={12} className={isSelected ? 'opacity-100' : 'opacity-0'} />}
           </div>
@@ -214,14 +213,17 @@ const OnboardingForm: React.FC = () => {
     </div>
   );
 
-  const CheckboxCard = ({ label, isSelected, onToggle }: any) => (
-    <div onClick={onToggle} className={`relative overflow-hidden p-3 sm:p-4 border cursor-pointer transition-all duration-300 rounded-sm group w-full ${isSelected ? 'border-black bg-white shadow-md' : 'border-gray-100 bg-white hover:border-gray-300'}`}>
-      <div className={`absolute inset-0 bg-gradient-to-r from-[#87E8A0]/5 to-[#71E2E4]/5 transition-all duration-500 ease-out ${isSelected ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+  const CheckboxCard = ({ label, isSelected, onToggle, disabled = false }: any) => (
+    <div 
+      onClick={!disabled ? onToggle : undefined} 
+      className={`relative overflow-hidden p-3 sm:p-4 border transition-all duration-300 rounded-sm group w-full ${disabled ? 'bg-gray-100 border-gray-100 cursor-not-allowed opacity-50' : 'cursor-pointer'} ${!disabled && isSelected ? 'border-black bg-white shadow-md' : 'border-gray-100 bg-white hover:border-gray-300'}`}
+    >
+      {!disabled && <div className={`absolute inset-0 bg-gradient-to-r from-[#87E8A0]/5 to-[#71E2E4]/5 transition-all duration-500 ease-out ${isSelected ? 'w-full' : 'w-0 group-hover:w-full'}`} />}
       <div className="relative z-10 flex items-center gap-3 sm:gap-4">
-        <div className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 border flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-black border-black scale-110' : 'border-gray-300 bg-white group-hover:border-gray-400'}`}>
+        <div className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 border flex items-center justify-center transition-all duration-300 ${!disabled && isSelected ? 'bg-black border-black scale-110' : 'border-gray-300 bg-white group-hover:border-gray-400'}`}>
           {isSelected && <Check size={10} className="text-white" />}
         </div>
-        <span className={`mono text-[9px] sm:text-[10px] uppercase tracking-widest font-bold transition-colors ${isSelected ? 'text-black' : 'text-gray-500 group-hover:text-black'}`}>{label}</span>
+        <span className={`mono text-[9px] sm:text-[10px] uppercase tracking-widest font-bold transition-colors ${!disabled && isSelected ? 'text-black' : 'text-gray-500 group-hover:text-black'}`}>{label}</span>
       </div>
     </div>
   );
@@ -403,12 +405,43 @@ const OnboardingForm: React.FC = () => {
           </div>
         );
       case 'location-equipment':
+        const equipOptions = ['Speakers (PA)', 'Mixer', 'Microfoons', 'Monitoren', 'Backline', 'Bekabeling', 'Stroomtoevoer', 'Weet ik (nog) niet'];
+        const isEquipmentBlocked = formData['equip-Weet ik (nog) niet'];
+        
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Aanwezig op locatie?</h2>
-            <div className="grid grid-cols-2 gap-2">{['Speakers (PA)', 'Mengtafel', 'Microfoons', 'Monitoren', 'Weet ik niet', 'Niks aanwezig'].map(e => (
-                <CheckboxCard key={e} label={e} isSelected={formData[`equip-${e}`]} onToggle={() => updateFormData(`equip-${e}`, !formData[`equip-${e}`])} />
-            ))}</div>
+            <div className="grid grid-cols-2 gap-2">
+              {equipOptions.map(e => {
+                const isBlockingOption = e === 'Weet ik (nog) niet';
+                const isDisabled = !isBlockingOption && isEquipmentBlocked;
+                
+                return (
+                  <CheckboxCard 
+                    key={e} 
+                    label={e} 
+                    isSelected={formData[`equip-${e}`]} 
+                    disabled={isDisabled}
+                    onToggle={() => {
+                      if (isDisabled) return;
+                      const newValue = !formData[`equip-${e}`];
+                      
+                      if (isBlockingOption && newValue) {
+                        // If selecting a blocking option, clear all others
+                        const nextData = { ...formData };
+                        equipOptions.forEach(opt => {
+                          if (opt !== e) delete nextData[`equip-${opt}`];
+                        });
+                        nextData[`equip-${e}`] = true;
+                        setFormData(nextData);
+                      } else {
+                        updateFormData(`equip-${e}`, newValue);
+                      }
+                    }} 
+                  />
+                );
+              })}
+            </div>
           </div>
         );
       case 'location-name':
