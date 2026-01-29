@@ -285,7 +285,7 @@ const OnboardingForm: React.FC = () => {
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Wat moet er bewerkt worden?</h2>
-            <div className="grid gap-2">{['Podcast editing', 'Audio restauratie', 'Geluidsontwerp voor video', 'Anders'].map(t => (
+            <div className="grid gap-2">{['Podcast-montage & editing', 'Mixen van een muziekopname', 'Geluid onder video editen / mixen', 'Anders'].map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['nabewerking-type'] === t} onClick={() => updateFormData('nabewerking-type', t)} />
             ))}</div>
           </div>
