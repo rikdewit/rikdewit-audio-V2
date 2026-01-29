@@ -369,7 +369,7 @@ const OnboardingForm: React.FC = () => {
       case 'studio-recording-method':
         return (
           <div className="space-y-3 sm:space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Hoe wil je opnemen??</h2>
+            <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Hoe wil je opnemen?</h2>
             <div className="grid gap-2">
               {['Live opname', 'Multitrack / Overdubs'].map(m => (
                 <OptionCard key={m} label={m} isSelected={formData['studio-recording-method'] === m} onClick={() => updateFormData('studio-recording-method', m)} />
@@ -396,7 +396,7 @@ const OnboardingForm: React.FC = () => {
             <div className="grid gap-3 sm:gap-4">
                {isOpLocatie && (
                  <div className="flex flex-col gap-0.5">
-                   <label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Locatie</label>
+                   <label className="mono text-[10px] uppercase text-gray-400 font-bold tracking-widest">Opnamelocatie</label>
                    <input 
                      type="text" 
                      className="border-b border-gray-300 py-1.5 text-base sm:text-lg focus:border-black outline-none font-light bg-transparent text-black w-full" 
