@@ -204,7 +204,8 @@ const OnboardingForm: React.FC = () => {
       <div className={`absolute inset-0 bg-gradient-to-r from-[#87E8A0]/10 to-[#71E2E4]/10 transition-all duration-500 ease-out ${isSelected ? 'w-full' : 'w-0 group-hover:w-full'}`} />
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-4 sm:gap-5">
-          <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border flex items-center justify-center transition-all ${isSelected ? 'bg-black border-black text-white' : 'border-gray-200 text-gray-400 group-hover:border-black group-hover:text-black'}`}>
+          {/* shrink-0 ensures the circle doesn't deform when text is long */}
+          <div className={`w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-full border flex items-center justify-center transition-all ${isSelected ? 'bg-black border-black text-white' : 'border-gray-200 text-gray-400 group-hover:border-black group-hover:text-black'}`}>
             {Icon ? <Icon size={12} /> : <Check size={12} className={isSelected ? 'opacity-100' : 'opacity-0'} />}
           </div>
           <span className={`mono text-[10px] sm:text-xs uppercase tracking-widest font-bold ${isSelected ? 'text-black' : 'text-gray-500 group-hover:text-black'}`}>{label}</span>
@@ -217,7 +218,7 @@ const OnboardingForm: React.FC = () => {
     <div onClick={onToggle} className={`relative overflow-hidden p-3 sm:p-4 border cursor-pointer transition-all duration-300 rounded-sm group w-full ${isSelected ? 'border-black bg-white shadow-md' : 'border-gray-100 bg-white hover:border-gray-300'}`}>
       <div className={`absolute inset-0 bg-gradient-to-r from-[#87E8A0]/5 to-[#71E2E4]/5 transition-all duration-500 ease-out ${isSelected ? 'w-full' : 'w-0 group-hover:w-full'}`} />
       <div className="relative z-10 flex items-center gap-3 sm:gap-4">
-        <div className={`w-4 h-4 sm:w-5 sm:h-5 border flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-black border-black scale-110' : 'border-gray-300 bg-white group-hover:border-gray-400'}`}>
+        <div className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 border flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-black border-black scale-110' : 'border-gray-300 bg-white group-hover:border-gray-400'}`}>
           {isSelected && <Check size={10} className="text-white" />}
         </div>
         <span className={`mono text-[9px] sm:text-[10px] uppercase tracking-widest font-bold transition-colors ${isSelected ? 'text-black' : 'text-gray-500 group-hover:text-black'}`}>{label}</span>
@@ -253,7 +254,7 @@ const OnboardingForm: React.FC = () => {
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Hoe kan ik helpen?</h2>
             <div className="grid gap-2">
-              <OptionCard label="Ik organiseer een evenement" isSelected={formData['live-type'] === 'organize'} onClick={() => updateFormData('live-type', 'organize')} />
+              <OptionCard label="Ik organiseer een evenement - Help mij de juiste keuzes maken" isSelected={formData['live-type'] === 'organize'} onClick={() => updateFormData('live-type', 'organize')} />
               <OptionCard label="Huur me direct in als technicus" isSelected={formData['live-type'] === 'hire'} onClick={() => updateFormData('live-type', 'hire')} />
             </div>
           </div>
