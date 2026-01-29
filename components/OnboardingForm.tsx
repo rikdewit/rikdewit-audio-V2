@@ -183,10 +183,13 @@ const OnboardingForm: React.FC = () => {
       return 'advies-goal';
     }
     if (step === 'advies-goal') {
+      // Horeca goes straight to details text area
+      if (formData['advies-who'] === 'Horeca / Retail') return 'anders-beschrijving';
+      
       const g = formData['advies-goal'];
       if (g === 'Geluidsinstallatie voor event') return 'live-event-type';
       if (g === 'Ruimte verbeteren (akoestiek)') return 'advies-ruimte';
-      if (g === 'Apparatuur aanschaffen') return 'advies-gebruik';
+      if (g === 'Apparatuur aanschaffen' || g === 'Beter geluidssysteem aanschaffen') return 'advies-gebruik';
       return 'anders-beschrijving';
     }
     if (step === 'advies-muzikant-details') return 'contact';
@@ -379,10 +382,14 @@ const OnboardingForm: React.FC = () => {
           </div>
         );
       case 'advies-goal':
+        const isHoreca = formData['advies-who'] === 'Horeca / Retail';
+        const goalOptions = isHoreca 
+          ? ['Beter geluidssysteem aanschaffen', 'Ruimte verbeteren (akoestiek)', 'Bestaand geluidssysteem afstellen', 'Anders']
+          : ['Geluidsinstallatie voor event', 'Ruimte verbeteren (akoestiek)', 'Apparatuur aanschaffen', 'Anders'];
         return (
           <div className="space-y-3 sm:space-y-4">
             <h2 className="text-2xl sm:text-3xl font-light tracking-tight text-black">Wat is het doel?</h2>
-            <div className="grid gap-2">{['Geluidsinstallatie voor event', 'Ruimte verbeteren (akoestiek)', 'Apparatuur aanschaffen', 'Anders'].map(t => (
+            <div className="grid gap-2">{goalOptions.map(t => (
                 <OptionCard key={t} label={t} isSelected={formData['advies-goal'] === t} onClick={() => updateFormData('advies-goal', t)} />
             ))}</div>
           </div>
